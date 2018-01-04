@@ -19,7 +19,6 @@ public abstract class Competition implements Parcelable {
         return new AutoValue_Competition.Builder();
     }
 
-
     @AutoValue.Builder
     public abstract static class Builder {
         public abstract Builder id(Long id);
