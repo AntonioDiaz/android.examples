@@ -17,14 +17,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".activities.CompetitionsActivity"></activity>
         <activity android:name=".activities.DetailsActivity"></activity>
-
-        <provider
-            android:authorities="com.adiaz.testingsqllite"
-            android:name=".contentprovider.LocalSportsContentProvider"
-            android:exported="false"></provider>
     </application>
 
 </manifest>
