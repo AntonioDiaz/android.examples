@@ -48,7 +48,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        unregisterReceiver(broadcastReceiver);
         super.onStop();
+        try {
+            unregisterReceiver(broadcastReceiver);
+        } catch (Exception e) {
+            Log.e(TAG, "onStop: unregistering" + e.getMessage(), e);
+        }
     }
 }

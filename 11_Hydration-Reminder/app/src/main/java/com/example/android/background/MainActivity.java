@@ -25,6 +25,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,9 +36,12 @@ import com.example.android.background.sync.ReminderUtilities;
 import com.example.android.background.sync.WaterReminderIntentService;
 import com.example.android.background.utilities.PreferenceUtilities;
 
+import static com.example.android.background.sync.ReminderUtilities.REMINDER_INTERVAL_MINUTES;
+
 public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     private TextView mWaterCountDisplay;
     private TextView mChargingCountDisplay;
     private ImageView mChargingImageView;
@@ -66,6 +70,12 @@ public class MainActivity extends AppCompatActivity implements
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(this);
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         /*
          * Setup and register the broadcast receiver
          */
@@ -73,12 +83,7 @@ public class MainActivity extends AppCompatActivity implements
         mChargingReceiver = new ChargingBroadcastReceiver();
         mChargingIntentFilter.addAction(Intent.ACTION_POWER_CONNECTED);
         mChargingIntentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
+        Log.d(TAG, "onResume: " + Build.VERSION.SDK_INT);
         /** Determine the current charging state **/
         // COMPLETED (1) Check if you are on Android M or later, if so...
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -86,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements
             BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
             // COMPLETED (3) Call isCharging on the battery manager and pass the result on to your show
             // charging method
+            Log.d(TAG, "onResume: " + batteryManager.isCharging());
             showCharging(batteryManager.isCharging());
         } else {
             // COMPLETED (4) If your user is not on M+, then...
@@ -105,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements
             boolean isCharging = batteryStatus == BatteryManager.BATTERY_STATUS_CHARGING ||
                     batteryStatus == BatteryManager.BATTERY_STATUS_FULL;
             // COMPLETED (8) Update the UI using your showCharging method
+            Log.d(TAG, "onResume: BatteryManager.BATTERY_STATUS_CHARGING " + BatteryManager.BATTERY_STATUS_CHARGING);
+            Log.d(TAG, "onResume: BatteryManager.BATTERY_STATUS_FULL " + BatteryManager.BATTERY_STATUS_FULL);
             showCharging(isCharging);
         }
 
@@ -134,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements
         String formattedChargingReminders = getResources().getQuantityString(
                 R.plurals.charge_notification_count, chargingReminders, chargingReminders);
         mChargingCountDisplay.setText(formattedChargingReminders);
+        mChargingCountDisplay.append("\n remainder each: " + REMINDER_INTERVAL_MINUTES + " minutes");
 
     }
 
@@ -173,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void showCharging(boolean isCharging){
+        Log.d(TAG, "showCharging: " + isCharging);
         if (isCharging) {
             mChargingImageView.setImageResource(R.drawable.ic_power_pink_80px);
 
@@ -184,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements
     private class ChargingBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "onReceive: " + intent.getAction());
             String action = intent.getAction();
             boolean isCharging = (action.equals(Intent.ACTION_POWER_CONNECTED));
 
