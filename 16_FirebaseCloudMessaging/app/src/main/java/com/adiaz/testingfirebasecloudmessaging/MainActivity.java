@@ -10,6 +10,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         registerReceiver(broadcastReceiver, new IntentFilter(MyFirebaseInstanceIdService.TOKEN_BROADCAST));
+        FirebaseMessaging.getInstance().subscribeToTopic("LEGANES");
 
     }
 

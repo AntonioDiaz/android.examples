@@ -1,10 +1,13 @@
 package com.adiaz.testingfirebasecloudmessaging;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.Map;
 
 /**
  * Created by adiaz on 4/1/18.
@@ -25,15 +28,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-
-            if (/* Check if data needs to be processed by long running job */ true) {
-                // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
-                //scheduleJob();
-            } else {
-                // Handle message within 10 seconds
-                //handleNow();
-            }
-
+            Map<String, String> data = remoteMessage.getData();
+            Log.d(TAG, "onMessageReceived: update competition ..." + data.get("id_competition"));
         }
 
         // Check if message contains a notification payload.
@@ -43,7 +39,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
-        notifyUser(remoteMessage.getFrom(), remoteMessage.getNotification().getBody());
+        String body = "my body";
+        if (remoteMessage.getNotification()!=null) {
+            body = remoteMessage.getNotification().getBody();
+        }
+        notifyUser(remoteMessage.getFrom(), body);
     }
 
     private void notifyUser(String from, String body) {
