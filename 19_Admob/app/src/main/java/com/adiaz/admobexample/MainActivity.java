@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private AdView mAdView;
     private InterstitialAd mInterstitialAd;
+    private int mCountSecondActivityOpen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +49,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openSecondActivity(View view) {
-        if (mInterstitialAd.isLoaded()) {
+        Log.d(TAG, "openSecondActivity: " + mCountSecondActivityOpen);
+        if (mInterstitialAd.isLoaded() && mCountSecondActivityOpen%2==0) {
             mInterstitialAd.show();
         } else {
             Log.d(TAG, "The interstitial wasn't loaded yet.");
             startActivity(new Intent(this, SecondActivity.class));
         }
-
-
+        mCountSecondActivityOpen++;
     }
 }
