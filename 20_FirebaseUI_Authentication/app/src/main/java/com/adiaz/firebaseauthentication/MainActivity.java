@@ -49,19 +49,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser()!=null) {
+                    firebaseAuth.getCurrentUser().reload();
                     Log.d(TAG, "onAuthStateChanged: " + firebaseAuth.getCurrentUser().getDisplayName());
+                    updateUserDescription(firebaseAuth.getCurrentUser());
                 }
             }
         });
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            title.setText("DisplayName: " + user.getDisplayName());
-            title.append("\n\nEMail: " + user.getEmail());
-            title.append("\n\nProviderId: " + user.getProviderId());
-            title.append("\n\nPhotoURL: " + user.getPhotoUrl());
-            title.append("\n\nPhone: " + user.getPhoneNumber());
-            title.append("\n\nUid: " + user.getUid());
-            Log.d(TAG, "onCreate: " + user.getPhotoUrl());
+            updateUserDescription(user);
         } else {
             title.setText("User outside");
             List<AuthUI.IdpConfig> providers = Arrays.asList(
@@ -78,6 +74,16 @@ public class MainActivity extends AppCompatActivity {
                             .build(),
                     RC_SIGN_IN);
         }
+    }
+
+    private void updateUserDescription(FirebaseUser user) {
+        title.setText("DisplayName: " + user.getDisplayName());
+        title.append("\n\nEMail: " + user.getEmail());
+        title.append("\n\nisVerified: " + user.isEmailVerified());
+        title.append("\n\nProviderId: " + user.getProviderId());
+        title.append("\n\nPhotoURL: " + user.getPhotoUrl());
+        title.append("\n\nPhone: " + user.getPhoneNumber());
+        title.append("\n\nUid: " + user.getUid());
     }
 
     @Override
@@ -120,6 +126,17 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (!user.isEmailVerified()) {
+                    user.sendEmailVerification()
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d(TAG, "Email sent.");
+                                    }
+                                }
+                            });
+                }
                 title.setText("User inside");
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
