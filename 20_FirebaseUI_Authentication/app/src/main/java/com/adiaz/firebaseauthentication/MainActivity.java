@@ -5,11 +5,15 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.firebase.FirebaseApp;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -44,14 +48,20 @@ public class MainActivity extends AppCompatActivity {
         instance.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                Log.d(TAG, "onAuthStateChanged: " + firebaseAuth.getCurrentUser().getDisplayName());
+                if (firebaseAuth.getCurrentUser()!=null) {
+                    Log.d(TAG, "onAuthStateChanged: " + firebaseAuth.getCurrentUser().getDisplayName());
+                }
             }
         });
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             title.setText("DisplayName: " + user.getDisplayName());
-            title.append("\nEMail: " + user.getEmail());
-            title.append("\nProviderId: " + user.getProviderId());
+            title.append("\n\nEMail: " + user.getEmail());
+            title.append("\n\nProviderId: " + user.getProviderId());
+            title.append("\n\nPhotoURL: " + user.getPhotoUrl());
+            title.append("\n\nPhone: " + user.getPhoneNumber());
+            title.append("\n\nUid: " + user.getUid());
+            Log.d(TAG, "onCreate: " + user.getPhotoUrl());
         } else {
             title.setText("User outside");
             List<AuthUI.IdpConfig> providers = Arrays.asList(
@@ -68,7 +78,36 @@ public class MainActivity extends AppCompatActivity {
                             .build(),
                     RC_SIGN_IN);
         }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        //menu.findItem(R.id.action_logout).setEnabled(false);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_logout:
+                doLogout();
+                break;
+            default:
+                Log.d(TAG, "onOptionsItemSelected: erroraco");
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void doLogout() {
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        startActivity(new Intent(MainActivity.this, MainActivity.class));
+                        finish();
+                    }
+                });
     }
 
     @Override
@@ -82,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 title.setText("User inside");
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
                 // ...
             } else {
                 // Sign in failed, check response for error code
