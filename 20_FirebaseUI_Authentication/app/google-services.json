@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "401873869112",
+    "firebase_url": "https://testing-firebase-today.firebaseio.com",
+    "project_id": "testing-firebase-today",
+    "storage_bucket": "testing-firebase-today.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401873869112:android:f3248252b4fdbe9b",
+        "android_client_info": {
+          "package_name": "com.adiaz.firebaseauthentication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "401873869112-9sq0apn0d0u0ujvphuh032i3qprv9909.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCai4tDpDIeS60bknXYI864JNLxBZXSkDU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
