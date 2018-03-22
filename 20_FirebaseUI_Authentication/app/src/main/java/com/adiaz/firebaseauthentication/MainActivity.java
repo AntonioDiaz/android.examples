@@ -1,12 +1,15 @@
 package com.adiaz.firebaseauthentication;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,31 +35,27 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
 
 
+    private FirebaseAuth.AuthStateListener authStateListener = new FirebaseAuth.AuthStateListener() {
+        @Override
+        public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+            Toast.makeText(MainActivity.this, "onAuthStateChanged -->" + firebaseUser, Toast.LENGTH_SHORT).show();
+            if (firebaseUser==null) {
+
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        //FirebaseApp.initializeApp(this);
-
-        // Choose authentication providers
-        /*
-
-        */
-        FirebaseAuth instance = FirebaseAuth.getInstance();
-        instance.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser()!=null) {
-                    firebaseAuth.getCurrentUser().reload();
-                    Log.d(TAG, "onAuthStateChanged: " + firebaseAuth.getCurrentUser().getDisplayName());
-                    updateUserDescription(firebaseAuth.getCurrentUser());
-                }
-            }
-        });
+        ;
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseAuth.getInstance().
         if (user != null) {
+            FirebaseAuth.getInstance().addAuthStateListener(authStateListener);
             updateUserDescription(user);
         } else {
             title.setText("User outside");
@@ -74,6 +73,12 @@ public class MainActivity extends AppCompatActivity {
                             .build(),
                     RC_SIGN_IN);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        FirebaseAuth.getInstance().removeAuthStateListener(authStateListener);
     }
 
     private void updateUserDescription(FirebaseUser user) {
@@ -110,8 +115,9 @@ public class MainActivity extends AppCompatActivity {
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {
-                        startActivity(new Intent(MainActivity.this, MainActivity.class));
-                        finish();
+                        //startActivity(new Intent(MainActivity.this, MainActivity.class));
+                        //finish();
+                        Toast.makeText(MainActivity.this, "log out onComplete -->", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
