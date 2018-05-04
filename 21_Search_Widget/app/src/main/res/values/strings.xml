@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SearchWidget</string>
+    <string name="app_label">App Label</string>
+    <string name="search_hint">Search Hint</string>
+    <string name="menu_search">Search</string>
+    <string name="action_settings">settings</string>
+</resources>
