@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -14,19 +14,50 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="@string/app_name"
-        />
+        app:title="@string/app_name" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Search Widget"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/view_sports"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Search Widget"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/white"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/view_search_results"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
+        android:visibility="invisible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Search results"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/colorPrimaryDark"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
 
 </android.support.constraint.ConstraintLayout>
