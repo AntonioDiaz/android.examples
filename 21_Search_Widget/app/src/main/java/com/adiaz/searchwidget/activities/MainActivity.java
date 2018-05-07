@@ -5,8 +5,9 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -14,11 +15,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.adiaz.searchwidget.R;
-import com.adiaz.searchwidget.retrofit.entities.Team;
+import com.adiaz.searchwidget.adapter.SearchTeamAdapter;
 import com.adiaz.searchwidget.retrofit.TeamsRestApi;
+import com.adiaz.searchwidget.retrofit.entities.Team;
 
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -47,6 +48,9 @@ public class MainActivity extends AppCompatActivity implements Callback<List<Tea
 
     @BindView(R.id.my_toolbar)
     Toolbar myToolbar;
+
+    @BindView(R.id.rv_teams)
+    RecyclerView rvTeams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,16 +91,13 @@ public class MainActivity extends AppCompatActivity implements Callback<List<Tea
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(TAG, "onCreateOptionsMenu: ");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        MenuItem menuItemSearch = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) menuItemSearch.getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
-        MenuItem item = menu.findItem(R.id.search);
-        item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-
+        menuItemSearch.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem menuItem) {
                 return true;
@@ -118,8 +119,12 @@ public class MainActivity extends AppCompatActivity implements Callback<List<Tea
         progressDialog.dismiss();
         viewSports.setVisibility(View.INVISIBLE);
         viewSearchResults.setVisibility(View.VISIBLE);
-        Toast.makeText(this, "toma toma ..." + response.body().size(), Toast.LENGTH_SHORT).show();
-
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        rvTeams.setLayoutManager(layoutManager);
+        rvTeams.setHasFixedSize(true);
+        SearchTeamAdapter adapter = new SearchTeamAdapter(response.body(), this);
+        rvTeams.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
