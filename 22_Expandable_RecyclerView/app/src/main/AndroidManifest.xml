@@ -16,6 +16,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".expand.ExpandActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".multicheck.MultiCheckActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".singlecheck.SingleCheckActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".multitype.MultiTypeActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".multitypeandcheck.MultiTypeCheckGenreActivity"
+            android:parentActivityName=".MainActivity" />
+
+
     </application>
 
 </manifest>
