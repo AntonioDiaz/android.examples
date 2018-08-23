@@ -1,11 +1,9 @@
 package com.adiaz.kotlinandretrofit2
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.support.v7.app.AppCompatActivity
 import com.adiaz.kotlinandretrofit2.model.RepositorySearchResult
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.toast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
